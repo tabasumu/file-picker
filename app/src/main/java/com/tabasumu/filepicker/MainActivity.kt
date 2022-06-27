@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.pickBtn.setOnClickListener {
 
-            FilePicker.Builder(this).pick {
+            FilePicker.Builder(this).inputType("image/*").pick {
                 it.forEach { (_, file) ->
                     Timber.i("${file.name} exists: ${file.exists()}")
                 }

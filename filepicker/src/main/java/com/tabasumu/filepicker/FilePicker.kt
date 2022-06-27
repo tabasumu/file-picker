@@ -16,6 +16,7 @@ class FilePicker internal constructor(builder: Builder) :
     BottomSheetDialogFragment() {
 
     private val callback: ((result: List<Pair<Uri, File>>) -> Unit)? = builder.callback
+    private val inputType: String = builder.input
 
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
@@ -36,11 +37,21 @@ class FilePicker internal constructor(builder: Builder) :
 
 
     class Builder constructor(private val fragmentActivity: FragmentActivity) {
+
+
         @get:JvmSynthetic
         @set: JvmSynthetic
         internal var callback: ((result: List<Pair<Uri, File>>) -> Unit)? = null
 
-        fun pick(callback: (result: List<Pair<Uri, File>>) -> Unit) = apply {
+        @get:JvmSynthetic
+        @set: JvmSynthetic
+        internal var input: String = "*/*"
+
+        fun inputType(type: String) = apply {
+            this.input = type
+        }
+
+        fun pick(callback: (result: List<Pair<Uri, File>>) -> Unit) {
             this.callback = callback
             FilePicker(this).show(fragmentActivity)
         }
@@ -56,7 +67,7 @@ class FilePicker internal constructor(builder: Builder) :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        filePickerLauncher.launch("*/*")
+        filePickerLauncher.launch(inputType)
     }
 
     private fun Uri.getFile(context: Context): File {
