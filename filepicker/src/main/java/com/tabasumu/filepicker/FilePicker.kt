@@ -3,24 +3,19 @@ package com.tabasumu.filepicker
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.provider.OpenableColumns
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toFile
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-class FilePicker(private val callback: (result: List<Pair<Uri, File>>) -> Unit) :
-    AppCompatActivity() {
+class FilePicker internal constructor(builder: Builder) :
+    BottomSheetDialogFragment() {
 
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        startFilePicking()
-    }
-
+    private val callback: ((result: List<Pair<Uri, File>>) -> Unit)? = builder.callback
 
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
@@ -28,19 +23,41 @@ class FilePicker(private val callback: (result: List<Pair<Uri, File>>) -> Unit) 
                 //Map result to list of pairs containing uri and file
                 val result = uriList.map { mUri ->
                     val file = when (mUri.scheme) {
-                        "content" -> mUri.getFile(this)
+                        "content" -> mUri.getFile(requireContext())
                         else -> mUri.toFile()
                     }
                     Pair(mUri, file)
                 }
-                callback.invoke(result)
+
+                callback?.invoke(result)
+                this.dismiss()
             }
         }
 
-    private fun startFilePicking() {
-        filePickerLauncher.launch("*/*")
+
+    class Builder constructor(private val fragmentActivity: FragmentActivity) {
+        @get:JvmSynthetic
+        @set: JvmSynthetic
+        internal var callback: ((result: List<Pair<Uri, File>>) -> Unit)? = null
+
+        fun pick(callback: (result: List<Pair<Uri, File>>) -> Unit) = apply {
+            this.callback = callback
+            FilePicker(this).show(fragmentActivity)
+        }
+
+        private fun BottomSheetDialogFragment?.show(activity: FragmentActivity) {
+            if ((this?.isVisible) == false) {
+                this.show(activity.supportFragmentManager, activity.localClassName)
+                activity.supportFragmentManager.executePendingTransactions()
+            }
+        }
+
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        filePickerLauncher.launch("*/*")
+    }
 
     private fun Uri.getFile(context: Context): File {
         val destinationFilename =
