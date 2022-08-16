@@ -4,7 +4,7 @@
 
 This is a library that help in picking a single or multiple files of your choosing.
 
-# Instalation
+# Installation
 
 ### Kotlin DSL
 
