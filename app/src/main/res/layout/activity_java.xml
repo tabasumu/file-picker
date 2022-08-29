@@ -4,27 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".JavaActivity">
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/pick_btn"
+    <Button
+        android:id="@+id/btn_pick_multiple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick Multiple"
+        android:text="Pick Single"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/pick_btn_single"
+        android:id="@+id/btn_pick_single"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Pick Single"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pick_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_pick_multiple" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

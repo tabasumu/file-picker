@@ -16,6 +16,7 @@ class FilePicker internal constructor(builder: Builder) :
     BottomSheetDialogFragment() {
 
     private val callback: ((result: List<Pair<Uri, File>>) -> Unit)? = builder.callback
+    private val singleCallback: ((uri: Uri, file: File) -> Unit)? = builder.singleFileCallback
     private val inputType: String = builder.input
 
     private val filePickerLauncher =
@@ -30,11 +31,13 @@ class FilePicker internal constructor(builder: Builder) :
                     Pair(mUri, file)
                 }
 
-                callback?.invoke(result)
+                if (result.size <= 1)
+                    singleCallback?.invoke(result.first().first, result.first().second)
+                else
+                    callback?.invoke(result)
                 this.dismiss()
             }
         }
-
 
     class Builder constructor(private val fragmentActivity: FragmentActivity) {
 
@@ -42,6 +45,10 @@ class FilePicker internal constructor(builder: Builder) :
         @get:JvmSynthetic
         @set: JvmSynthetic
         internal var callback: ((result: List<Pair<Uri, File>>) -> Unit)? = null
+
+        @get:JvmSynthetic
+        @set: JvmSynthetic
+        internal var singleFileCallback: ((uri: Uri, file: File) -> Unit)? = null
 
         @get:JvmSynthetic
         @set: JvmSynthetic
@@ -53,6 +60,11 @@ class FilePicker internal constructor(builder: Builder) :
 
         fun pick(callback: (result: List<Pair<Uri, File>>) -> Unit) {
             this.callback = callback
+            FilePicker(this).show(fragmentActivity)
+        }
+
+        fun pickSingle(callback: (uri: Uri, file: File) -> Unit) {
+            this.singleFileCallback = callback
             FilePicker(this).show(fragmentActivity)
         }
 

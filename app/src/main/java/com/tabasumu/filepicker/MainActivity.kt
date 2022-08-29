@@ -18,16 +18,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.pickBtn.setOnClickListener {
 
-            FilePicker.Builder(this).inputType("*/*").pick {
-                it.forEach { (_, file) ->
+            FilePicker.Builder(this)
+                .inputType("*/*")
+                .pick {
+                    it.forEach { (_, file) ->
+                        Timber.i("${file.name} exists: ${file.exists()}")
+                        Timber.i("PATH: ${file.path}")
+                        Timber.i("EXT: ${file.extension}")
+                    }
+                }
+
+        }
+
+        binding.pickBtnSingle.setOnClickListener {
+            FilePicker.Builder(this)
+                .inputType("*/*")
+                .pickSingle { uri, file ->
                     Timber.i("${file.name} exists: ${file.exists()}")
                     Timber.i("PATH: ${file.path}")
                     Timber.i("EXT: ${file.extension}")
                 }
-            }
-
         }
-
-
     }
 }

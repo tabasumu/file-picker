@@ -16,5 +16,25 @@ implementation("com.github.tabasumu:file-picker:$version")
 
 ```
 implementation 'com.github.tabasumu:file-picker:$version'
+```
+
+# Usage
+
+```
+
+    // MULTIPLE FILES
+    FilePicker
+        .Builder(activity : FragmentActivity)
+        .pick { list : List<Pair<Uri, File>> ->
+            // do anyhting with list
+        }
+        
+    // SINGLE FILE
+    
+     FilePicker
+        .Builder(activity : FragmentActivity)
+        .pickSingle { uri : Uri, file : File ->
+            // do anyhting with uri or file
+        }
 
 ```
