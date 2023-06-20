@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.pickBtnSingle.setOnClickListener {
             FilePicker.Builder(this)
-                .inputType("*/*")
+                .inputType("application/pdf;image/jpeg")
                 .pickSingle { uri, file ->
                     Timber.i("${file.name} exists: ${file.exists()}")
                     Timber.i("PATH: ${file.path}")

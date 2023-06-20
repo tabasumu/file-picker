@@ -1,6 +1,7 @@
 package com.tabasumu.filepicker
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -15,12 +16,23 @@ import java.io.InputStream
 class FilePicker internal constructor(builder: Builder) :
     BottomSheetDialogFragment() {
 
+    class GetFiles : ActivityResultContracts.GetMultipleContents() {
+        override fun createIntent(context: Context, input: String): Intent {
+            return super.createIntent(context, "*/*").apply {
+                putExtra(
+                    Intent.EXTRA_MIME_TYPES,
+                    input.split(";").filter { it.isNotBlank() }.toTypedArray(),
+                )
+            }
+        }
+    }
+
     private val callback: ((result: List<Pair<Uri, File>>) -> Unit)? = builder.callback
     private val singleCallback: ((uri: Uri, file: File) -> Unit)? = builder.singleFileCallback
     private val inputType: String = builder.input
 
     private val filePickerLauncher =
-        registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
+        registerForActivityResult(GetFiles()) {
             it?.let { uriList ->
                 // Map result to list of pairs containing uri and file
                 val result = uriList.map { mUri ->
