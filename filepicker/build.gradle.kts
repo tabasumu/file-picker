@@ -20,7 +20,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -53,8 +53,6 @@ afterEvaluate {
                 artifactId = "file-picker"
                 version = "1.0.0-alpha-1"
             }
-
         }
     }
 }
-

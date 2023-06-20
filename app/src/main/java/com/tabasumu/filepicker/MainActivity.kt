@@ -15,9 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-
         binding.pickBtn.setOnClickListener {
-
             FilePicker.Builder(this)
                 .inputType("*/*")
                 .pick {
@@ -27,7 +25,6 @@ class MainActivity : AppCompatActivity() {
                         Timber.i("EXT: ${file.extension}")
                     }
                 }
-
         }
 
         binding.pickBtnSingle.setOnClickListener {

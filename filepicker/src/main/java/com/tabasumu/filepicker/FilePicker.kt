@@ -22,7 +22,7 @@ class FilePicker internal constructor(builder: Builder) :
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
             it?.let { uriList ->
-                //Map result to list of pairs containing uri and file
+                // Map result to list of pairs containing uri and file
                 val result = uriList.map { mUri ->
                     val file = when (mUri.scheme) {
                         "content" -> mUri.getFile(requireContext())
@@ -31,16 +31,16 @@ class FilePicker internal constructor(builder: Builder) :
                     Pair(mUri, file)
                 }
 
-                if (result.size <= 1)
+                if (result.size == 1) {
                     singleCallback?.invoke(result.first().first, result.first().second)
-                else
+                } else {
                     callback?.invoke(result)
+                }
                 this.dismiss()
             }
         }
 
     class Builder constructor(private val fragmentActivity: FragmentActivity) {
-
 
         @get:JvmSynthetic
         @set: JvmSynthetic
@@ -74,7 +74,6 @@ class FilePicker internal constructor(builder: Builder) :
                 activity.supportFragmentManager.executePendingTransactions()
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +88,7 @@ class FilePicker internal constructor(builder: Builder) :
             context.contentResolver.openInputStream(this).use { ins ->
                 createFileFromStream(
                     ins!!,
-                    destinationFilename
+                    destinationFilename,
                 )
             }
         } catch (ex: Exception) {
@@ -121,10 +120,8 @@ class FilePicker internal constructor(builder: Builder) :
             val name = returnCursor.getString(nameIndex)
             returnCursor.close()
             name
-        } else null
+        } else {
+            null
+        }
     }
-
-
 }
-
-
